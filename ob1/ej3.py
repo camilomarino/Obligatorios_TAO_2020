@@ -35,16 +35,16 @@ def plot_f(f, f_nombre, label='f(x)', new_figure=True, vmin=-1.2, vmax=1.2):
     plt.grid(True)
     
 
-f1 = lambda x:4*x**4-x**3-4*x**2+1, '4x^4-x^3-4*x^2+1'
-f2 = lambda x:x**3, 'x^3'
-f3 = lambda a:(lambda x:(x-a)**2+1, f'(x-1)^2+{a}')
+f1 = lambda x:4*x**4-x**3-4*x**2+1, '$4x^4-x^3-4*x^2+1$'
+f2 = lambda x:x**3, '$x^3$'
+f3 = lambda a:(lambda x:(x-a)**2+1, f'$(x-1)^2+{a}$')
 #%%
 plot_f(*f1)
 plot_f(*f2)
 #%%
 new_figure = True
 for a in [-2,-1,0,1,2]:
-    plot_f(*f3(a), new_figure=new_figure, label=f'a = {a}')
+    plot_f(*f3(a), new_figure=new_figure, label=f'a = {a}', vmin=-4, vmax=4)
     new_figure = False
 
 
