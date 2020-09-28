@@ -55,8 +55,10 @@ class Optimizer:
             return LineSearch(f, **kwargs)
         elif type_step=='armijo':
             return Armijo(f, **kwargs)
-        elif type_step=='PGD':
-            return PGD(f, **kwargs)            
+        elif type_step=='PGD_DecreasingStep':
+            return PGD_DecreasingStep(f, **kwargs)      
+        elif type_step=='PGD_LineSearch':
+            return PGD_LineSearch(f, **kwargs)        
         else:
             raise AttributeError
   
@@ -72,7 +74,7 @@ class Optimizer:
 class Step():
     def __init__(self):
         raise NotImplementedError
-    def next_step():
+    def next_xk():
         raise NotImplementedError
         
 class ConstantStep(Step):
@@ -141,21 +143,34 @@ class Armijo(Step):
         xk = xk+alfa*self.s*dk
         return xk
     
-class PGD(Step):
+class PGD_DecreasingStep(Step):
     '''
     Caso particular de alpha = 1. Para otro caso el codigo seria más dificil,
     pero más general.
     Paso decreciente con el valor de constant
     '''
     def __init__(self, f, proyection, constant, **kwargs):
-        self.f = f
         self.proyection = proyection
-        self.constant = constant
+        self.decreasing_step = DecreasingStep(f, constant, **kwargs)
     
     def next_xk(self, xk, k, D):
-        step = self.constant/k
-        xk = xk - step * D@self.f.backward(xk)
+        xk = self.decreasing_step.next_xk(xk, k, D)
         xk = self.proyection(xk)
         return xk        
         
+    
+class PGD_LineSearch(Step):
+    '''
+    Caso particular de alpha = 1. Para otro caso el codigo seria más dificil,
+    pero más general.
+    Line Search
+    '''
+    def __init__(self, f, proyection, n_points=1000, long=1, **kwargs):
+        self.proyection = proyection
+        self.line_search = LineSearch(f, n_points=1000, long=1, **kwargs)
+    
+    def next_xk(self, xk, k, D):
+        xk = self.line_search.next_xk(xk, k, D)
+        xk = self.proyection(xk)
+        return xk  
         

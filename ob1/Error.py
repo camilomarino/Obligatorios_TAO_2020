@@ -12,3 +12,10 @@ class Error:
         pass
     def __call__(self, xk, xk_1):
         return np.linalg.norm(xk-xk_1)/np.linalg.norm(xk_1)
+    
+    
+class ErrorToPreviousSample:
+    def __init__(self):
+        pass
+    def __call__(self, xk, xk_1):
+        return np.linalg.norm(xk-xk_1)
