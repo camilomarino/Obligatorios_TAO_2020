@@ -1,6 +1,8 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
+path_base = 'plots'
+
 def calc_trajectory(opt, error, error_to_optim, iteraciones=1000, min_error=0.0001):
     k, x, e = [opt.k], [opt.xk], [error_to_optim(opt.xk)]
     
@@ -22,7 +24,7 @@ def calc_trajectory(opt, error, error_to_optim, iteraciones=1000, min_error=0.00
         
 def plot_trayectory(x, title, annotate=True, k=None):
     plt.scatter(x[0], x[1])
-    plt.plot(x[0], x[1])
+    #plt.plot(x[0], x[1])
     if annotate: 
         for i in range(k.shape[0]):
             if i%7==0:
@@ -30,14 +32,14 @@ def plot_trayectory(x, title, annotate=True, k=None):
     plt.xlabel('$x$')
     plt.ylabel('$y$')
     plt.title(title)
-    plt.savefig(title+'png')
+    plt.savefig(path_base+'/'+title+'.png')
 
 def plot_error(e, title=None):
     plt.plot(e, label=title)
     plt.xlabel('Iteración')
     plt.ylabel('Error')
     if title is not None: plt.title(title)
-    plt.savefig(title+'png')
+    plt.savefig(path_base+'/'+title+'.png')
     
 def print_info(k,x,e, error, tipo=""):
     x_ = x[0,-1]
