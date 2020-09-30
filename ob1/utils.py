@@ -27,12 +27,14 @@ def calc_trajectory(opt, error, error_to_optim, iteraciones=1000,
     if more_data: return k,x,e,f
     return k, x, e
         
-def plot_trayectory(x, title, annotate=True, k=None):
+def plot_trayectory(x, title, annotate=True, k=None, with_lines=False,
+                    step_numbers=7):
     plt.scatter(x[0], x[1])
-    #plt.plot(x[0], x[1])
+    if with_lines:
+        plt.plot(x[0], x[1], c='r', linewidth=2)
     if annotate: 
         for i in range(k.shape[0]):
-            if i%7==0:
+            if i%step_numbers==0:
                 plt.annotate(k[i], (x[0,i], x[1,i]))
     plt.xlabel('$x$')
     plt.ylabel('$y$')

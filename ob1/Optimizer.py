@@ -167,10 +167,12 @@ class PGD_LineSearch(Step):
     '''
     def __init__(self, f, proyection, n_points=1000, long=1, **kwargs):
         self.proyection = proyection
-        self.line_search = LineSearch(f, n_points=1000, long=1, **kwargs)
+        self.line_search = LineSearch(f, n_points=n_points, long=long, **kwargs)
     
     def next_xk(self, xk, k, D):
         xk = self.line_search.next_xk(xk, k, D)
+        # print(xk)
         xk = self.proyection(xk)
+        # print(xk)
         return xk  
         
