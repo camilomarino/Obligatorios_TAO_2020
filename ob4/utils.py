@@ -21,7 +21,10 @@ class minimosCuadrados(Function):
         grad = At @ (A@x - b)
         '''
         return self.A.T @ (self.A@x - self.b)
-    
+    def proximal(self, x, alpha):
+        first_matrix = np.eye(x.shape[0]) + alpha*self.A.T@self.A
+        second_matrix = x + alpha*self.A.T@self.b
+        return np.linalg.inv(first_matrix) @ second_matrix
     
 class regularizacionL1(Function):
     '''
@@ -51,6 +54,7 @@ class PGD(Optimizer):
     '''
     Proximal gradient descent
     '''
+    __name___ = 'PGD'
     def __init__(self, f, g, alpha):
         self.f = f
         self.g = g
@@ -65,6 +69,37 @@ class PGD(Optimizer):
         x_siguiente = self.g.proximal(v, self.alpha)
         return x_siguiente
 
+
+class ADMM(Optimizer):
+    '''
+    A diferencia de PGD, tiene memoria, por lo que no alcanza solo con el
+    x anterior. Internamente guardo z y u. No guardo x (lo recibo como
+    parametro en step) para tener la misma interfaz que PGD
+    '''
+    __name__ = 'ADMM'
+    def __init__(self, f, g, alpha):
+        self.f = f
+        self.g = g
+        self.alpha = alpha
+        self.u = None
+        self.z = None
+        
+    def step(self, x):
+        if self.u is None and self.z is None:
+            self._init_uz(x.shape)
+        
+        x_siguiente = self.f.proximal(self.z - self.u, self.alpha)
+        z_siguiente = self.g.proximal(x_siguiente + self.u, self.alpha)
+        u_siguiente = self.u + x_siguiente - z_siguiente
+        
+        self.u = u_siguiente
+        self.z = z_siguiente
+        
+        return x_siguiente
+            
+    def _init_uz(self, shape):
+        self.u = np.zeros(shape)
+        self.z = np.zeros(shape)
 
 class ThresholdDiffStop:
     def __init__(self, diff):
