@@ -14,6 +14,8 @@ class minimosCuadrados(Function):
     def __init__(self, A, b):
         self.A = A
         self.b = b
+        self.first_matrix = dict()
+        self.second_matrix = dict()
     def forward(self, x):
         return 1/2 * np.linalg.norm(self.A@x-self.b, ord=2)**2
     def grad(self, x):
@@ -22,9 +24,21 @@ class minimosCuadrados(Function):
         '''
         return self.A.T @ (self.A@x - self.b)
     def proximal(self, x, alpha):
-        first_matrix = np.eye(x.shape[0]) + alpha*self.A.T@self.A
-        second_matrix = x + alpha*self.A.T@self.b
-        return np.linalg.inv(first_matrix) @ second_matrix
+        #Optimizacion para no invertir siempre la matriz
+        if alpha in self.first_matrix.keys():
+            first_matrix = self.first_matrix[alpha]
+        else:
+            first_matrix = np.eye(x.shape[0]) + alpha*self.A.T@self.A
+            first_matrix = np.linalg.inv(first_matrix) 
+            self.first_matrix[alpha] = first_matrix
+        if alpha in self.second_matrix.keys():
+            second_matrix = self.second_matrix[alpha]
+        else:
+            second_matrix = alpha*self.A.T@self.b
+            self.second_matrix[alpha] = second_matrix
+        return first_matrix @ (x + second_matrix)
+    def min(self):
+        return np.linalg.inv(self.A.T@self.A) @ self.A.T @ self.b
     
 class regularizacionL1(Function):
     '''
@@ -110,7 +124,7 @@ class ThresholdDiffStop:
             self.x_ant = x_nuevo
             self.iter += 1
             return False
-        condition = np.linalg.norm(x_nuevo-self.x_ant)<self.diff
+        condition = np.linalg.norm(x_nuevo-self.x_ant)<self.diff or self.iter>=100
         self.x_ant = x_nuevo
         self.iter += 1
         return condition
