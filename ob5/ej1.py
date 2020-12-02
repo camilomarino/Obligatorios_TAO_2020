@@ -16,7 +16,7 @@ class DecreasingStep:
     def __init__(self, const, *k1, **k2):
         self.const = const
     def step(self, k):
-        return self.const/k
+        return self.const/(k+5)
     def __str__(self):
         return fr'$\alpha_k = {self.const}/k$'
 
