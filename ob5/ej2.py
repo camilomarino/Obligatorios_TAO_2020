@@ -11,9 +11,21 @@ conejos = np.loadtxt('Conejos.asc').astype(np.uint8)
 def vect2img(x):
     return np.transpose((x[:-1].reshape(3, 256,256)), (2,1,0))
 
-
-plt.figure()
-plt.imshow(vect2img(gatos[:, 0]))
+ks = [20, 23]
+for k in ks:
+    plt.figure()
+    plt.axis(False)
+    plt.title(t:=f'Conejo. Indice {k}')
+    plt.imshow(vect2img(gatos[:, k]))
+    plt.savefig(t+'.png')
+    
+ks = [21,26]
+for k in ks:
+    plt.figure()
+    plt.axis(False)
+    plt.title(t:=f'Gato. Indice {k}')
+    plt.imshow(vect2img(conejos[:, k]))
+    plt.savefig(t+'.png')
 #%%
 
 plt.figure()
@@ -75,16 +87,16 @@ for n in tqdm(range(N_EPOCHS)):
 label = lambda x: 'gato' if x<0.5 else 'conejo'
 
 print('GATOS')
-for k in range(0,10):
+for k in range(0,20):
     gato = gatos[:, k:k+1]
     v = a.T@gato
-    print(v, label(v))
+    print(k, v, label(v))
 
 print('\n\nCONEJOS')
-for k in range(0,10):
+for k in range(0,20):
     conejo = conejos[:, k:k+1]
     v = a.T@conejo
-    print(v, label(v))
+    print(k, v, label(v))
 #%%
 # Test
 label = lambda x: 'gato' if x<0.5 else 'conejo'
@@ -93,19 +105,20 @@ print('GATOS')
 for k in range(20,30):
     gato = gatos[:, k:k+1]
     v = a.T@gato
-    print(v, label(v))
+    print(k, v, label(v))
 
 print('\n\nCONEJOS')
 for k in range(20,30):
     conejo = conejos[:, k:k+1]
     v = a.T@conejo
-    print(v, label(v))
+    print(k, v, label(v))
     
 #%%
-plt.figure(figsize=(7,7))
+plt.rcParams['font.size'] = 18
+plt.figure(figsize=(11,7))
 for k in range(20):
-    plt.scatter(gatos[:,k]@a, k, c='g', label='gatos')
-    plt.scatter(conejos[:,k]@a, k, c='r', label='gatos')
+    plt.scatter(gatos[:,k]@a, k, c='g', label='gatos', s=70, marker='o')
+    plt.scatter(conejos[:,k]@a, k, c='r', label='gatos', s=70, marker='x')
 plt.axvline(0.5)
 plt.legend(['linea divisoria', 'gatos', 'conejos'])
 plt.title('Ejemplos de train')
@@ -115,10 +128,10 @@ plt.grid(True)
 plt.savefig('figures/ej2_train')
 
 #%%
-plt.figure(figsize=(7,7))
+plt.figure(figsize=(11,7))
 for k in range(20,30):
-    plt.scatter(gatos[:,k]@a, k, c='g', label='gatos', marker='o')
-    plt.scatter(conejos[:,k]@a, k, c='r', label='gatos', marker='x')
+    plt.scatter(gatos[:,k]@a, k, c='g', label='gatos', s=70, marker='o')
+    plt.scatter(conejos[:,k]@a, k, c='r', label='gatos', s=70, marker='x')
 plt.axvline(0.5)
 plt.legend(['linea divisoria', 'gatos', 'conejos'])
 plt.title('Ejemplos de validación')
