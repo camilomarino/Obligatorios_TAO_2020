@@ -1,5 +1,3 @@
-# TAO_2020
-
 # Curso TAO (Teoría y Algoritmia de Optimización) 2020
 
 Entregables de [TAO: Teoría y Algoritmia de Optimización](https://eva.fing.edu.uy/course/view.php?id=963) realizada en 2020. 
