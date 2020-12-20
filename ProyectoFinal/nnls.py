@@ -6,7 +6,7 @@ def nnls(Z:np.ndarray,
          verbose: bool = True) -> np.ndarray:
     '''
     Resuelve el problema:
-        min_d \\x - Zd\\^2 
+        min_d \\x - Zd\\ 
         s.t d>0
     Codigo basado en Algorithmn NNLS de http://xrm.phys.northwestern.edu/research/pdf_papers/1997/bro_chemometrics_1997.pdf
     Parameters
@@ -53,7 +53,7 @@ def nnls(Z:np.ndarray,
     i = 0
     while True:
         i += 1
-        print(i)
+        #print(i)
         if P: 
             w[np.array(list(P))] = -np.inf
         # B1
@@ -88,7 +88,7 @@ def nnls(Z:np.ndarray,
             w = w_expr(d)
         else:
             break
-    cost = np.linalg.norm(X - Z@d, ord=2)**2
+    cost = np.linalg.norm(X - Z@d, ord=2)
     if verbose: print(f'Cantidad de iteraciones: {i}\nTiempo: {time()-ti:.2f}')
     return d.reshape((d.shape[0],)), cost
     
