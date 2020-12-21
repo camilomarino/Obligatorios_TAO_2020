@@ -25,10 +25,10 @@ def get_D(elec_meter, threshold=1e-5):
     Dado un ElecMeter de nilmtk y un umbral para no tener vectores nulos, 
     devuelve  el vector D que resuelve el problema de optimzacion
     '''
-    fn = lambda x: x['current'].max()>threshold
+    #fn = lambda x: x['current'].max()>threshold
     df = next(elec_meter.load(resample=True,  sample_period=60))
     
-    splitted = split_by_day(df, fn)
+    splitted = split_by_day(df)#, fn)
     return list_of_series2numpy(splitted)
 
 #%%
