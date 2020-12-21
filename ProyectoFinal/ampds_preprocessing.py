@@ -27,10 +27,10 @@ FULL_NAME = {
              'HTE': 'Instant Hot Water Unit',
              'OFE': 'Home Office',
              'OUE': 'Outside Plug',
-             'RSE': 'Entertainment: TV, PVR, AMP',
-             'TVE': 'Utility Room Plug',
-             'UTE': 'Wall Oven',
-             'WOE': 'Unmetered Loads Soft-Meter'
+             'RSE': 'Rental Suite',
+             'TVE': 'Entertainment: TV, PVR, AMP',
+             'UTE': 'Utility Room Plug',
+             'WOE': 'Wall Oven',
              }
 
 def split_by_day(df, fn_filter=None):
