@@ -17,6 +17,7 @@ def adam_pgd(D: np.ndarray,
             A0: np.ndarray = None,
             mask: np.ndarray = None,
             n_mask: int = None,
+            early_stopping = None,
             verbose: bool = True) -> np.ndarray:
     
     X = torch.tensor(X, device=device, dtype=torch.float32)
@@ -33,8 +34,12 @@ def adam_pgd(D: np.ndarray,
     
     optimizer = optim.Adam([A], lr=lr, betas=betas)
     losses = list()
+    best_A = None
+    best_loss = float('inf')
+    count_stop = 0
     for k in range(max_iter):
         optimizer.zero_grad()
+        if k!=0: A.grad.zero_()
         loss = f(A)
         losses.append(float(loss))
         loss.backward()
@@ -48,6 +53,15 @@ def adam_pgd(D: np.ndarray,
                 eps = 1e-10
                 for i in range(n_mask):
                     A[mask==i] /= (A[mask==i].sum(dim=0) + eps)
-                    
+            
+            if float(loss)<best_loss:
+                best_A = to_np(A)
+                best_loss = float(loss)
+                count_stop = 0
+            else:
+                if early_stopping is not None:
+                    count_stop += 1
+                    if count_stop>early_stopping:
+                        break
 
-    return to_np(A), float(loss), losses
+    return best_A, float(loss), losses
